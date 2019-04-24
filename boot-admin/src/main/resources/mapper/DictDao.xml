@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gengyu.modules.sys.dao.DictDao">
+    <sql id="BASE_COLUMN">
+        a.id,
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.del_flag AS "delFlag",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime",
+        a.description,
+        a.value,
+        a.parent_id AS "parentId",
+        a.label,
+        a.status,
+        a.type,
+        a.sort_order AS "sortOrder",
+        a.del_flag AS "delFlag"
+    </sql>
+    <insert id="insert"  parameterType="com.gengyu.modules.sys.entity.Dict">
+        insert into sys_dict
+          (
+              id,
+              create_by,
+              create_time,
+              del_flag,
+              update_by,
+              update_time,
+              description,
+              value,
+              parent_id,
+              label,
+              status,
+              type,
+              sort_order
+           )
+           values
+          (
+             #{id},
+           #{createBy},
+           #{createTime},
+           #{delFlag},#{updateBy},#{updateTime},#{description},#{value},#{parentId},#{label},#{status},#{type},#{sortOrder}
+          )
+    </insert>
+    <select id="findList" resultType="com.gengyu.modules.sys.entity.Dict">
+        select <include refid="BASE_COLUMN"/> from sys_dict a
+        <where>
+            <trim suffixOverrides="AND">
+                <if test="label!=null and label!=''">
+                    a.label like concat('%',#{label},'%') AND
+                </if>
+                <if test="type!=null and type!=''">
+                    a.type=#{type} AND
+                </if>
+                <if test="status!=null">
+                    a.status=#{status} AND
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="findAllList" resultType="com.gengyu.modules.sys.entity.Dict">
+        select <include refid="BASE_COLUMN"/> from sys_dict a
+        <where>
+            <if test="status!=null">
+                a.status=#{status}
+            </if>
+        </where>
+        group by a.type
+    </select>
+    <update id="update" parameterType="com.gengyu.modules.sys.entity.Dict">
+        update sys_dict
+        <set>
+            <trim suffixOverrides=",">
+                <if test="value!=null and value!=''">
+                    value=#{value},
+                </if>
+                <if test="updateBy!=null and updateBy!=''">
+                    update_by=#{updateBy},
+                </if>
+                <if test="updateTime!=null">
+                    update_time=#{updateTime},
+                </if>
+                <if test="label!=null and label!=''">
+                    label=#{label},
+                </if>
+                <if test="type!=null and type!=''">
+                    type=#{type},
+                </if>
+                <if test="sortOrder!=null">
+                    sort_order=#{sortOrder},
+                </if>
+                <if test="description!=null and description!=''">
+                    description=#{description},
+                </if>
+                <if test="status!=null">
+                    status=#{status},
+                </if>
+            </trim>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from sys_dict where id=#{id}
+    </delete>
+    <select id="get" resultType="com.gengyu.modules.sys.entity.Dict">
+        select <include refid="BASE_COLUMN"/> from sys_dict a where a.id=#{id}
+    </select>
+
+    <select id="findByType" resultType="com.gengyu.modules.sys.entity.Dict">
+        select <include refid="BASE_COLUMN"/> from sys_dict a where a.type=#{type} and a.status=0 order by a.sort_order desc
+    </select>
+</mapper>

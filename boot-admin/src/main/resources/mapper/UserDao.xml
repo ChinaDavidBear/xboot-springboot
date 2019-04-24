@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gengyu.modules.sys.dao.UserDao">
+    <sql id="BASE_COLUMN">
+        a.id,
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.del_flag AS "delFlag",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime",
+        a.address,
+        a.avatar,
+        a.description,
+        a.email,
+        a.mobile,
+        a.nick_name AS "nickName",
+        a.password,
+        a.sex,
+        a.status,
+        a.type,
+        a.username,
+        a.office_id AS "officeId",
+        a.street,
+        a.pass_strength AS "passStrength"
+    </sql>
+
+    <select id="findByUsername" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a where a.username=#{username}
+    </select>
+    <select id="findByMobile" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a  where a.mobile=#{mobile}
+    </select>
+    <select id="findByEmail" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a  where a.email=#{email}
+    </select>
+    <select id="findList" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a
+        <where>
+            <trim suffixOverrides="AND">
+                <if test="username!=null and username!=''">
+                    a.username like concat('%',#{username},'%') AND
+                </if>
+                <if test="officeId!=null and officeId!=''">
+                    a.office_id=#{officeId} AND
+                </if>
+                <if test="mobile!=null and mobile!=''">
+                    a.mobile=#{mobile} AND
+                </if>
+                <if test="email!=null and email!=''">
+                    a.email=#{email} AND
+                </if>
+                <if test="sex!=null">
+                    a.sex=#{sex} AND
+                </if>
+                <if test="type!=null">
+                    a.type=#{type} AND
+                </if>
+                <if test="status!=null">
+                    a.status=#{status} AND
+                </if>
+            </trim>
+        </where>
+        order by a.${sort} ${order}
+    </select>
+    <select id="get" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a where a.id=#{id}
+    </select>
+    <update id="update" parameterType="com.gengyu.modules.sys.entity.User">
+        update sys_user
+        <set>
+            <trim suffixOverrides=",">
+                <if test="username!=null and username!=''">
+                    username=#{username},
+                </if>
+                <if test="updateTime!=null">
+                    update_time=#{updateTime},
+                </if>
+                <if test="updateBy!=null and updateBy!=''">
+                    update_by=#{updateBy},
+                </if>
+                <if test="address!=null and address!=''">
+                    address=#{address},
+                </if>
+                <if test="avatar!=null and avatar!=''">
+                    avatar=#{avatar},
+                </if>
+                <if test="description!=null and description!=''">
+                    description=#{description},
+                </if>
+                <if test="email!=null and email!=''">
+                    email=#{email},
+                </if>
+                <if test="nickName!=null and nickName!=''">
+                    nick_name=#{nickName},
+                </if>
+                <if test="sex!=null and sex!=''">
+                    sex=#{sex},
+                </if>
+                <if test="status!=null">
+                    status=#{status},
+                </if>
+                <if test="officeId!=null and officeId!=''">
+                    office_id=#{officeId},
+                </if>
+                <if test="street!=null and street!=''">
+                    street=#{street},
+                </if>
+            </trim>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <insert id="insert" parameterType="com.gengyu.modules.sys.entity.User">
+        insert into sys_user (id,create_by,create_time,update_by,update_time,address,avatar,description,email,mobile,nick_name,password,sex,status,type,username,del_flag,office_id,street,pass_strength)
+        values(#{id},#{createBy},#{createTime},#{updateBy},#{updateTime},#{address},#{avatar},#{description},#{email},#{mobile},#{nickName},#{password},#{sex},#{status},#{type},#{username},#{delFlag},#{officeId},#{street},#{passStrength})
+    </insert>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from sys_user where id=#{id}
+    </delete>
+
+    <select id="findByOfficeId" resultType="com.gengyu.modules.sys.entity.User">
+        select <include refid="BASE_COLUMN"/> from sys_user a where a.office_id=#{officeId}
+    </select>
+</mapper>

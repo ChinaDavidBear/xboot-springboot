@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gengyu.modules.sys.dao.MessageDao">
+  <sql id="BASE_COLUMN">
+        id,
+        create_by AS "createBy",
+        create_time AS "createTime",
+        del_flag AS "delFlag",
+        update_by AS "updateBy",
+        update_time AS "updateTime",
+        title,
+        context
+    </sql>
+  <insert id="insert"  parameterType="com.gengyu.modules.sys.entity.Messages">
+        insert into sys_message
+          (
+           id,
+           create_by,
+           create_time,
+           del_flag,
+           update_by,
+           update_time,
+           title,
+           context
+           )
+           values
+          (
+             #{id},
+           #{createBy},
+           #{createTime},
+           #{delFlag},
+           #{updateBy},
+           #{updateTime},
+           #{title},
+           #{context}
+          )
+    </insert>
+  <update id="update" parameterType="com.gengyu.modules.sys.entity.Messages">
+    update sys_message
+    <set>
+      <trim suffixOverrides=",">
+        <if test="title!=null and title!=''">
+          title=#{title},
+        </if>
+        <if test="updateTime!=null">
+          update_time=now(),
+        </if>
+        <if test="context!=null and context!=''">
+          context=#{context},
+        </if>
+      </trim>
+    </set>
+    <where>
+      id=#{id}
+    </where>
+  </update>
+  <select id="findList" resultType="com.gengyu.modules.sys.entity.Messages">
+    select <include refid="BASE_COLUMN"/> from sys_message a
+    <where>
+      <trim suffixOverrides="AND">
+        <if test="title!=null and title!=''">
+          a.title like concat('%',#{title},'%') AND
+        </if>
+        <if test="startDate!=null and endDate!=null and startDate!='' and endDate!=''">
+          a.create_time BETWEEN #{startDate} and #{endDate}
+        </if>
+      </trim>
+    </where>
+  </select>
+  <delete id="delete" parameterType="java.lang.String">
+        delete from sys_message where id=#{id}
+    </delete>
+  <delete id="deleteAll">
+        delete from sys_message
+    </delete>
+  <select id="get" resultType="com.gengyu.modules.sys.entity.Messages">
+    select <include refid="BASE_COLUMN"/> from sys_message a where a.id=#{id}
+  </select>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gengyu.modules.sys.dao.OfficeDao">
+    <sql id="BASE_COLUMN">
+        a.id,
+        a.create_by AS "createBy",
+        a.create_time AS "createTime",
+        a.del_flag AS "delFlag",
+        a.update_by AS "updateBy",
+        a.update_time AS "updateTime",
+        a.parent_id AS "parentId",
+        a.sort_order AS "sortOrder",
+        a.status,
+        a.title,
+        a.is_parent AS "isParent"
+    </sql>
+    <select id="get" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where a.id=#{id}
+    </select>
+    <select id="findByParentIdOrderBySortOrder" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where a.parent_id=#{parentId} order by a.sort_order desc
+    </select>
+
+    <select id="findByParentIdAndIdInOrderBySortOrder" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where a.parent_id=#{parentId} and a.id in(#{officeId}) order by a.sort_order desc
+    </select>
+
+    <select id="findByParentIdAndStatusOrderBySortOrder" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where a.parent_id=#{parentId} and a.status=#{status} order by a.sort_order desc
+    </select>
+
+    <select id="findByTitleLikeOrderBySortOrder" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where  a.title  like concat('%',#{title},'%') order by a.sort_order asc
+    </select>
+    <select id="findByTitleLikeAndIdInOrderBySortOrder" resultType="com.gengyu.modules.sys.entity.Office">
+        select <include refid="BASE_COLUMN"/> from sys_office a where  a.title  like concat('%',#{title},'%')  and a.id in(#{officeId}) order by a.sort_order asc
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from sys_office where id=#{id}
+    </delete>
+    <insert id="insert" parameterType="com.gengyu.modules.sys.entity.Office">
+        insert into sys_office(id,create_by,create_time,del_flag,update_by,update_time,parent_id,sort_order,status,title,is_parent)
+        values(#{id},#{createBy},#{createTime},#{delFlag},#{updateBy},#{updateTime},#{parentId},#{sortOrder},#{status},#{title},#{isParent})
+    </insert>
+    <update id="update" parameterType="com.gengyu.modules.sys.entity.Office">
+        update sys_office
+        <set>
+            <trim suffixOverrides=",">
+                <if test="updateTime!=null">
+                    update_time=#{updateTime},
+                </if>
+                <if test="updateBy!=null and updateBy!=''">
+                    update_by=#{updateBy},
+                </if>
+                <if test="parentId!=null and parentId!=''">
+                    parent_id=#{parentId},
+                </if>
+                <if test="sortOrder!=null and sortOrder!=''">
+                    sort_order=#{sortOrder},
+                </if>
+                <if test="status!=null">
+                    status=#{status},
+                </if>
+                <if test="title!=null and title!=''">
+                    title=#{title},
+                </if>
+                <if test="isParent!=null">
+                    is_parent=#{isParent},
+                </if>
+            </trim>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+</mapper>

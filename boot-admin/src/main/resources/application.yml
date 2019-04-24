@@ -1,0 +1,130 @@
+# 配置文件加密key
+jasypt:
+  encryptor:
+    password: xboot
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+spring:
+  # 数据源
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/xboot?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123qwe
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # Druid StatViewServlet配置
+    druid:
+      stat-view-servlet:
+        # 默认true 内置监控页面首页/druid/index.html
+        enabled: true
+        url-pattern: /druid/*
+        # 允许清空统计数据
+        reset-enable: true
+        login-username: root
+        login-password: root
+        # IP白名单 多个逗号分隔
+        allow:
+        # IP黑名单
+        deny:
+  # Redis
+  redis:
+    host: 127.0.0.1
+    password:
+    # 数据库索引 默认0
+    database: 10
+    port: 6379
+    timeout: 3000
+  # 文件大小上传配置
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 3MB
+  banner:
+    location: classpath:banner.txt
+  resources:
+    static-locations: classpath:static/,classpath:upload/,file:${spring.http.multipart.location}
+  devtools:
+    restart:
+      additional-paths: src/main/java
+      exclude: upload/**,static/**
+file:
+  path: /upload/
+pagehelper:
+   dialect: com.github.pagehelper.dialect.helper.MySqlDialect
+   row-bounds-with-count: true
+   reasonable: true
+   support-methods-arguments: true
+   params: count=countSql
+admin:
+  # 全局限流
+  rateLimit:
+    enable: true
+    # 每1秒内
+    timeout: 1000
+    # 总限制100个请求
+    limit: 100
+  # token交互方式
+  token:
+    # 默认JWT 启用Redis后设置为true后，token将存入redis
+    redis: true
+  # token过期时间（分钟）
+  tokenExpireTime: 60
+  # 用户选择保存登录状态对应token过期时间（天）
+  saveLoginTime: 7
+  # 限制用户登陆错误次数（次）
+  loginTimeLimit: 10
+  # 错误超过次数后多少分钟后才能继续登录（分钟）
+  loginAfterTime: 10
+  # mob api配置 mob官网注册申请即可
+  mob:
+    appKey: 297e77269e800
+
+# 忽略鉴权url
+ignored:
+  urls:
+    - /admin/user/regist
+    - /admin/common/**
+    - /druid/**
+    - /admin/logout/
+    - /swagger-ui.html
+    - /swagger-resources/**
+    - /swagger/**
+    - /**/v2/api-docs
+    - /a/**
+    - /**/common/captcha/**
+    - /upload/*
+    - /**/*.js
+    - /**/*.css
+    - /**/*.png
+    - /**/*.jpg
+    - /**/*.ico
+    - /test/**
+
+# Swagger界面内容配置
+swagger:
+  title: Admin API接口文档
+  description: Admin Api Documentation
+  version: 1.0.0
+  termsOfServiceUrl: http://blog.exrick.cn
+  contact:
+    name: 小胡
+    url: http://blog.exrick.cn
+    email: 1012139570@qq.com
+  #mybatis
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/**/*Dao.xml
+  type-aliases-package: com.gengyu
+
+# 日志
+logging:
+  file: logs/log.log
+  level:
+   com.gengyu: debug

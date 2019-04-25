@@ -5,7 +5,7 @@ export const loginRouter = {
     path: '/login',
     name: 'login',
     meta: {
-        title: '后台管理 '
+        title: '人事管理系统'
     },
     component: () => import('@/views/login.vue')
 };
@@ -14,7 +14,7 @@ export const registRouter = {
     path: '/regist',
     name: 'regist',
     meta: {
-        title: '后台管理'
+        title: '人事管理系统'
     },
     component: () => import('@/views/regist.vue')
 };
@@ -23,7 +23,7 @@ export const registResult = {
     path: '/regist-result',
     name: 'regist-result',
     meta: {
-        title: '后台管理'
+        title: '人事管理系统'
     },
     component: () => import('@/views/regist-result.vue')
 };

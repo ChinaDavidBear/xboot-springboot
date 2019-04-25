@@ -50,18 +50,18 @@
                     </Row>
                     <Row class="operation">
                         <Button @click="add" type="primary" icon="md-add" v-has="'add'">添加用户</Button>
-                        <Button @click="delAll" icon="md-trash" v-has="'add'">批量删除</Button>
-                        <Dropdown @on-click="handleDropdown" v-has="'add'">
-                          <Button>
-                              更多操作
-                              <Icon type="md-arrow-dropdown" />
-                          </Button>
-                          <DropdownMenu slot="list">
-                              <DropdownItem name="refresh">刷新</DropdownItem>
-                              <DropdownItem name="exportData">导出所选数据</DropdownItem>
-                              <DropdownItem name="exportAll">导出全部数据</DropdownItem>
-                          </DropdownMenu>
-                        </Dropdown>
+                        <!--<Button @click="delAll" icon="md-trash" v-has="'add'">批量删除</Button>-->
+                        <!--<Dropdown @on-click="handleDropdown" v-has="'add'">-->
+                          <!--<Button>-->
+                              <!--更多操作-->
+                              <!--<Icon type="md-arrow-dropdown" />-->
+                          <!--</Button>-->
+                          <!--<DropdownMenu slot="list">-->
+                              <!--<DropdownItem name="refresh">刷新</DropdownItem>-->
+                              <!--<DropdownItem name="exportData">导出所选数据</DropdownItem>-->
+                              <!--<DropdownItem name="exportAll">导出全部数据</DropdownItem>-->
+                          <!--</DropdownMenu>-->
+                        <!--</Dropdown>-->
                         <circleLoading v-if="operationLoading"/>
                     </Row>
                     <Row>
@@ -83,28 +83,28 @@
         <Modal :title="modalTitle" v-model="userModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
             <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
                 <FormItem label="用户名" prop="username">
-                    <Input v-model="userForm.username" autocomplete="off"/>
+                    <Input v-model="userForm.username"  :disabled="!isUpdate" autocomplete="off"/>
                 </FormItem>
                 <FormItem label="密码" prop="password" v-if="modalType===0" :error="errorPass">
-                    <Input type="password" v-model="userForm.password" autocomplete="off"/>
+                    <Input type="password" :disabled="!isUpdate" v-model="userForm.password" autocomplete="off"/>
                 </FormItem>
                 <FormItem label="邮箱" prop="email">
-                    <Input v-model="userForm.email"/>
+                    <Input v-model="userForm.email" :disabled="!isUpdate"/>
                 </FormItem>
                 <FormItem label="手机号" prop="mobile">
-                    <Input v-model="userForm.mobile"/>
+                    <Input v-model="userForm.mobile" :disabled="!isUpdate" />
                 </FormItem>
                 <FormItem label="性别" prop="sex">
-                  <RadioGroup v-model="userForm.sex">
-                    <Radio v-for="(item, i) in dictSex" :key="i" :label="Number(item.value)">{{item.label}}</Radio>
+                  <RadioGroup v-model="userForm.sex" :disabled="!isUpdate" >
+                    <Radio v-for="(item, i) in dictSex" :key="i" :disabled="!isUpdate"  :label="Number(item.value)">{{item.label}}</Radio>
                   </RadioGroup>
                 </FormItem>
                 <Form-item label="头像" prop="avatar">
                   <Poptip trigger="hover" title="图片预览" placement="right" width="350">
-                      <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable/>
+                      <Input v-model="userForm.avatar" :disabled="!isUpdate"  placeholder="可直接填入网络图片链接" clearable/>
                       <div slot="content">
                         <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
-                        <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
+                        <a @click="viewPic()" :disabled="!isUpdate"  style="margin-top:5px;text-align:right;display:block">查看原图</a>
                       </div>
                   </Poptip>
                   <Upload :action="uploadFileUrl"
@@ -119,30 +119,30 @@
                           :show-upload-list="false"
                           ref="up"
                           class="upload">
-                    <Button icon="ios-cloud-upload-outline">上传图片</Button>
+                    <Button icon="ios-cloud-upload-outline" :disabled="!isUpdate" >上传图片</Button>
                   </Upload>
                 </Form-item>
                 <Form-item label="所属部门" prop="departmentTitle">
-                  <Poptip trigger="click" placement="right" title="选择部门" width="250">
+                  <Poptip trigger="click" :disabled="!isUpdate"  placement="right" title="选择部门" width="250">
                     <div style="display:flex;">
-                      <Input v-model="userForm.officeTitle" readonly style="margin-right:10px;"/>
-                      <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
+                      <Input v-model="userForm.officeTitle" :disabled="!isUpdate"  readonly style="margin-right:10px;"/>
+                      <Button icon="md-trash" :disabled="!isUpdate"  @click="clearSelectDep">清空已选</Button>
                     </div>
                     <div slot="content" class="tree-bar">
-                      <Input v-model="searchKey" suffix="ios-search" @on-change="searchDp" placeholder="输入部门名搜索" clearable/>
-                      <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
-                      <Spin size="large" fix v-if="dpLoading"></Spin>
+                      <Input v-model="searchKey" :disabled="!isUpdate"  suffix="ios-search" @on-change="searchDp" placeholder="输入部门名搜索" clearable/>
+                      <Tree :data="dataDep" :disabled="!isUpdate"  :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
+                      <Spin size="large" :disabled="!isUpdate"  fix v-if="dpLoading"></Spin>
                     </div>
                   </Poptip>
                 </Form-item>
                 <FormItem label="用户类型" prop="type">
-                  <Select v-model="userForm.type" placeholder="请选择">
+                  <Select :disabled="!isUpdate"  v-model="userForm.type" placeholder="请选择">
                     <Option :value="0">普通用户</Option>
                     <Option :value="1">管理员</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="角色分配" prop="roles">
-                  <Select v-model="userForm.roles" multiple>
+                  <Select :disabled="!isUpdate"  v-model="userForm.roles" multiple>
                       <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
                         <!-- <div style="display:flex;flex-direction:column"> -->
                         <span style="margin-right:10px;">{{ item.name }}</span>
@@ -152,7 +152,7 @@
                   </Select>
                 </FormItem>
             </Form>
-            <div slot="footer">
+            <div slot="footer" v-show="isUpdate">
                 <Button type="text" @click="cancelUser">取消</Button>
                 <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
             </div>
@@ -219,6 +219,7 @@ export default {
       operationLoading: false,
       loadingExport: true,
       modalExportAll: false,
+      isUpdate:true,
       drop: false,
       dropDownContent: "展开",
       dropDownIcon: "ios-arrow-down",
@@ -419,7 +420,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 200,
+          width: 250,
           align: "center",
           render: (h, params) => {
             let enableOrDisable = "";
@@ -465,6 +466,25 @@ export default {
             }
               return h("div", [
                 h(
+                  "Button",
+                    {
+                        props: {
+                          type: "primary",
+                          size: "small"
+                        },
+                        style: {
+                          marginRight: "5px",
+                          display:(!this.$route.meta.permTypes.includes('edit'))?"none":"inline-block",
+                        },
+                        on: {
+                          click: () => {
+                          this.detail(params.row);
+                        }
+                      }
+                    },
+                    "查看"
+                  ),
+                  h(
                   "Button",
                   {
                     props: {
@@ -795,6 +815,7 @@ export default {
     },
     cancelUser() {
       this.userModalVisible = false;
+      this.isUpdate = true;
     },
     submitUser() {
       this.$refs.userForm.validate(valid => {
@@ -877,9 +898,26 @@ export default {
     handleError(error, file, fileList) {
       this.$Message.error(error.toString());
     },
+    detail(row){
+      console.info(row);
+      this.isUpdate = false;
+      this.modalTitle = "用户信息";
+      this.userModalVisible = true;
+      this.$refs.userForm.resetFields();
+      let str = JSON.stringify(row);
+      let userInfo = JSON.parse(str);
+      this.userForm = userInfo;
+      let selectRolesId = [];
+      this.userForm.roleList.forEach(function(e) {
+        selectRolesId.push(e.id);
+      });
+      this.userForm.roles = selectRolesId;
+      this.userModalVisible = true;
+    },
     add() {
       this.modalType = 0;
       this.modalTitle = "添加用户";
+      this.isUpdate = true;
       this.$refs.userForm.resetFields();
       this.userModalVisible = true;
     },
@@ -888,6 +926,7 @@ export default {
         this.$Message.error("不能编辑超级管理员");
         return
       }
+      this.isUpdate = true;
       this.modalType = 1;
       this.modalTitle = "编辑用户";
       this.$refs.userForm.resetFields();
